@@ -1,14 +1,14 @@
 <template>
-    <div class="flex items-center justify-center p-8 pt-24 bg-green-300">
+    <div class="flex items-center justify-center p-8 pt-24 bg-gray-300">
         <div ref="sertifcont" class="relative w-full max-w-screen-lg border">
-            <canvas id="canvas" />
+            <canvas id="canvas" class="shadow-md" />
         </div>
     </div>
     <div class="fixed top-0 w-full flex justify-between items-center p-4 bg-white shadow-md">
         <h1 class="text-xl font-semibold">Certificate Generator</h1>
         <div class="flex gap-4">
-            <UButton v-if="dataModel.length" @click="downloadCanvas">Download Certificate</UButton>
-            <UButton v-if="isDownloaded" @click="resetAll" color="red">New Certificate</UButton>
+            <UButton icon="i-heroicons-arrow-down-tray" v-if="dataModel.length" @click="downloadCanvas" color="blue">Download Certificate</UButton>
+            <UButton icon="i-heroicons-plus" v-if="isDownloaded" @click="resetAll" color="yellow">New Certificate</UButton>
         </div>
     </div>
 </template>
@@ -75,6 +75,8 @@ onMounted(() => {
         const inputEl = makeInput(input)
         inputEl.id = `input-${input.name}`
         sertifcont.value?.appendChild(inputEl)
+        // make input active
+        inputEl.focus()
     })
 })
 
