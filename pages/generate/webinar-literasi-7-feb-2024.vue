@@ -14,6 +14,16 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+    title: 'Sertifikat Webinar Literasi | 7 Feb 2024',
+    meta: [
+        {
+            name: 'description',
+            content: 'Generate sertifikat webinar literasi'
+        }
+    ]
+})
+
 import jsPDF from 'jspdf'
 
 const dataInput = [{
