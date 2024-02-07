@@ -36,13 +36,15 @@ const dataInput = [{
 const dataModel = ref<string[]>([])
 const isDownloaded = ref(false)
 
+let coeficient = 0
+
 const resetAll = () => {
     // reload page
     window.location.reload()
 }
 
 const sertifcont = ref<HTMLDivElement>()
-const makeInput = (input: { name: string, placeholder: string, x: number, y: number }, coeficient: number) => {
+const makeInput = (input: { name: string, placeholder: string, x: number, y: number }) => {
     console.log(coeficient)
     const inputEl = document.createElement('input')
     inputEl.type = 'text'
@@ -70,7 +72,6 @@ onMounted(() => {
     if (!ctx || !sertifcont) return
     // add image from assets/img/certif.jpg
     const img = new Image()
-    let coeficient = 0
     img.src = '/sertifikat-webinar-literasi.jpg'
     // get image width and height
     img.onload = () => {
@@ -84,7 +85,7 @@ onMounted(() => {
         ctx.drawImage(img, 0, 0, coeficient * imgWidth, coeficient * imgHeight)
         // add input
         dataInput.forEach(input => {
-            const inputEl = makeInput(input, coeficient)
+            const inputEl = makeInput(input)
             inputEl.id = `input-${input.name}`
             sertifcont.value?.appendChild(inputEl)
             // make input active
@@ -105,7 +106,7 @@ const downloadCanvas = () => {
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
     dataInput.forEach(input => {
-        ctx.fillText(dataModel.value[dataInput.findIndex(v => v.name === input.name)] ?? '', input.x, input.y)
+        ctx.fillText(dataModel.value[dataInput.findIndex(v => v.name === input.name)] ?? '', input.x * coeficient, input.y * coeficient)
     })
     // hide all input element
     const inputs = document.querySelectorAll('input')
