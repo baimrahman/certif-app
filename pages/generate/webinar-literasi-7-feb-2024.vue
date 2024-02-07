@@ -7,7 +7,8 @@
     <div class="fixed top-0 w-full flex justify-between items-center p-4 bg-white shadow-md">
         <h1 class="text-xl font-semibold">Certificate Generator</h1>
         <div class="flex gap-4">
-            <UButton icon="i-heroicons-arrow-down-tray" v-if="dataModel.length" @click="downloadCanvas" color="blue">Download Certificate</UButton>
+            <UButton icon="i-heroicons-arrow-down-tray" v-if="dataModel.length" @click="downloadCanvas" color="blue">
+                Download Certificate</UButton>
             <UButton icon="i-heroicons-plus" v-if="isDownloaded" @click="resetAll" color="yellow">New Certificate</UButton>
         </div>
     </div>
@@ -29,8 +30,8 @@ import jsPDF from 'jspdf'
 const dataInput = [{
     name: 'name',
     placeholder: 'Your name...',
-    x: 520,
-    y: 330
+    x: 1020,
+    y: 660
 }]
 const dataModel = ref<string[]>([])
 const isDownloaded = ref(false)
@@ -41,13 +42,14 @@ const resetAll = () => {
 }
 
 const sertifcont = ref<HTMLDivElement>()
-const makeInput = (input: { name: string, placeholder: string, x: number, y: number }) => {
+const makeInput = (input: { name: string, placeholder: string, x: number, y: number }, coeficient: number) => {
+    console.log(coeficient)
     const inputEl = document.createElement('input')
     inputEl.type = 'text'
     inputEl.placeholder = input.placeholder
     // inputEl.classList.add('bg-white', 'bg-opacity-50', 'absolute', 'text-center', 'focus:outline-none', 'p-1', 'w-2/6')
-    inputEl.style.top = `${input.y}px`
-    inputEl.style.left = `${input.x}px`
+    inputEl.style.top = `${input.y * coeficient}px`
+    inputEl.style.left = `${input.x * coeficient}px`
     inputEl.style.position = 'absolute'
     inputEl.style.backgroundColor = 'white'
     inputEl.style.outline = 'none'
@@ -68,26 +70,28 @@ onMounted(() => {
     if (!ctx || !sertifcont) return
     // add image from assets/img/certif.jpg
     const img = new Image()
+    let coeficient = 0
     img.src = '/sertifikat-webinar-literasi.jpg'
     // get image width and height
     img.onload = () => {
         const containerProps = sertifcont.value?.getBoundingClientRect()
         const imgHeight = img.height
         const imgWidth = img.width
-        const coeficient = (containerProps?.width ?? 0) / imgWidth
+        coeficient = (containerProps?.width ?? 0) / imgWidth
         canvas.width = coeficient * imgWidth
         canvas.height = coeficient * imgHeight
         console.log(coeficient * imgWidth, coeficient * imgHeight)
         ctx.drawImage(img, 0, 0, coeficient * imgWidth, coeficient * imgHeight)
+        // add input
+        dataInput.forEach(input => {
+            const inputEl = makeInput(input, coeficient)
+            inputEl.id = `input-${input.name}`
+            sertifcont.value?.appendChild(inputEl)
+            // make input active
+            inputEl.focus()
+        })
     }
-    // add input
-    dataInput.forEach(input => {
-        const inputEl = makeInput(input)
-        inputEl.id = `input-${input.name}`
-        sertifcont.value?.appendChild(inputEl)
-        // make input active
-        inputEl.focus()
-    })
+
 })
 
 const downloadCanvas = () => {
